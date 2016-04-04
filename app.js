@@ -17,9 +17,8 @@ app.get('/',function (req,res) {
 
 
 app.get('/search/:term',function(req,res) {
-	// var options = {
-
-	// } 
+	
+	//sample request--this is not yet dynamic :term from request should take the place of xbos,also we should have dynamic limit and take less data from the json body of the request
     request('https://user:PtDnqJYXMyc+KnBQWMpykJmKunkbJfv2fTqOgx21a6A@api.datamarket.azure.com/Bing/Search/v1/Image?Query=%27xbox%27&$top=10&$format=JSON', function (error, response, body) {
 	   
 	    if (!error && response.statusCode == 200) {
