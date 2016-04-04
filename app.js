@@ -22,7 +22,19 @@ app.get('/search/:term',function(req,res) {
     request('https://user:PtDnqJYXMyc+KnBQWMpykJmKunkbJfv2fTqOgx21a6A@api.datamarket.azure.com/Bing/Search/v1/Image?Query=%27xbox%27&$top=10&$format=JSON', function (error, response, body) {
 	   
 	    if (!error && response.statusCode == 200) {
-	    	res.json(JSON.parse(body));
+	    	var  parsedBody =  JSON.parse(body);
+	    	var  queryImages = parsedBody.d.results
+	    	var  output = {results:[]};
+	    	queryImages.forEach(function(Image){
+	    		output.results.push({
+
+	    			'ID':Image.ID,
+	    			'ImageURL':Image.MediaUrl,
+	    			'SourceURL':Image.SourceUrl,
+	    			'Title':Image.Title,
+	    		});
+	    	})
+	    	res.json(output);
   	}
 })
 });
