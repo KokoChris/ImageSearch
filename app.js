@@ -9,6 +9,7 @@ var express = require('express'),
 
 app.use(bodyParser.urlencoded({extended:false}));
 
+//add mongoose
 
 app.get('/',function (req,res) {
 	res.send("Hello from the root route");
