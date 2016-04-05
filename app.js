@@ -7,10 +7,30 @@ var express = require('express'),
 	bodyParser = require('body-parser');
 	app  	= express();
 
+
+var logSchema = new mongoose.Schema({
+    log: {
+        type: String
+    	}
+	},
+    {
+    	timestamps: true
+
+    }
+);
+
+var Log = mongoose.model("Log", logSchema);
+
+mongoose.connect('mongodb://dev:dev123@ds013320.mlab.com:13320/imglayer234')
+
 app.use(bodyParser.urlencoded({extended:false}));
 
 
 app.get('/',function (req,res) {
+	var newLog = { log: 'just a test' };
+     Log.create(newLog, function(err, log) {
+
+     });
 	res.send("Hello from the root route");
 });
 
@@ -37,6 +57,11 @@ app.get('/search/:term',function(req,res) {
 	    	res.json(output);
   	}
 })
+});
+
+app.get('/logs',function(req,res){
+  var q = Log.find({}).sort({'created_at':-1}).limit(10).exec(function(err,data){res.send(data)});
+  
 });
 
 app.listen(port,function(){
