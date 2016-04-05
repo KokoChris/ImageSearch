@@ -29,10 +29,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 
 app.get('/',function (req,res) {
-	var newLog = { log: 'just a test' };
-     Log.create(newLog, function(err, log) {
-
-     });
+	
 	res.send("Hello from the root route");
 });
 
@@ -41,11 +38,11 @@ app.get('/',function (req,res) {
 app.get('/search/:term',function(req,res) {
     
     
-    var number = req.query.offset || 10;
+    var offset = req.query.offset || 0;
 
         
 	//sample request--this is not yet dynamic :term from request should take the place of xbos,also we should have dynamic limit and take less data from the json body of the request
-    request(apiStart+apiKey+apiCode+ req.params.term + '%27&$top='+number+'&$format=JSON', function (error, response, body) {     
+    request(apiStart+apiKey+apiCode+ req.params.term + '%27&$top=10'+'&$skip='+offset+'&$format=JSON', function (error, response, body) {     
 	   
 	    if (!error && response.statusCode == 200) {
 	    	var  parsedBody =  JSON.parse(body);
@@ -60,13 +57,29 @@ app.get('/search/:term',function(req,res) {
 	    			'Title':Image.Title,
 	    		});
 	    	})
+	    	var newLog = { log: req.params.term };
+ 		    Log.create(newLog, function(err, log) {
+
+ 		    	if(err){
+ 		    		console.log(err);
+ 		    	}else{
+ 		    		console.log(log)
+ 		    	}
+
+	    	 });
 	    	res.json(output);
-  	}
+  		}else if(error){
+  			res.redirect('/')
+  		}
 })
 });
 
 app.get('/logs',function(req,res){
-  var q = Log.find({}).sort({'created_at':-1}).limit(10).exec(function(err,data){res.send(data)});
+  var q = Log.find({}).
+  		sort({'createdAt':-1}).
+  		limit(10).
+  		select({"createdAt":1,"log":1,_id:0}).
+  		exec(function(err,data){res.send(data)});
   
 });
 
