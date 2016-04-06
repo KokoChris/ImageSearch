@@ -2,9 +2,9 @@ var express = require('express'),
 	http 	= require('http'),
 	request = require('request'),
 	port    = process.env.PORT || 3000,
-    apiStart = "https://user:"
+        apiStart = "https://user:",
 	apiKey  = 'PtDnqJYXMyc+KnBQWMpykJmKunkbJfv2fTqOgx21a6A',
-    apiCode = "@api.datamarket.azure.com/Bing/Search/v1/Image?Query=%27"
+        apiCode = "@api.datamarket.azure.com/Bing/Search/v1/Image?Query=%27"
 	mongoose = require('mongoose'),
 	bodyParser = require('body-parser');
 	app  	= express();
