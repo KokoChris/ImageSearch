@@ -13,9 +13,11 @@ var express = require('express'),
 
 mongoose.connect(process.env.IMAGELAYERDB);
 
+app.use(express.static(__dirname + "/public/views"));
+
 
 app.get('/', function(req, res) {
-    res.send("Hello from the root route");
+    
 });
 
 
