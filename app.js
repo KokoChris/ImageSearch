@@ -6,24 +6,15 @@ var express = require('express'),
     apiKey = process.env.BINGAPIKEY,
     apiCode = "@api.datamarket.azure.com/Bing/Search/v1/Image?Query=%27",
     mongoose = require('mongoose'),
+    Log = require('./models/log')
     app = express();
 
 
-var logSchema = new mongoose.Schema({
-    log: {
-        type: String
-    }
-}, {
-    timestamps: true
-});
-
-var Log = mongoose.model("Log", logSchema);
 
 mongoose.connect(process.env.IMAGELAYERDB);
 
 
 app.get('/', function(req, res) {
-
     res.send("Hello from the root route");
 });
 
