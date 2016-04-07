@@ -2,11 +2,9 @@ var express = require('express'),
     http = require('http'),
     request = require('request'),
     port = process.env.PORT || 3000,
-    apiStart = "https://user:",
     apiKey = process.env.BINGAPIKEY,
-    apiCode = "@api.datamarket.azure.com/Bing/Search/v1/Image?Query=%27",
     mongoose = require('mongoose'),
-    Log = require('./models/log')
+    Log = require('./models/log'),
     app = express();
 
 
@@ -17,7 +15,7 @@ app.use(express.static(__dirname + "/public/views"));
 
 
 app.get('/', function(req, res) {
-    
+
 });
 
 
@@ -25,13 +23,28 @@ app.get('/', function(req, res) {
 app.get('/search/:term', function(req, res) {
 
     var offset = req.query.offset || 0;
+    var query = req.params.term;
+    var options = {
+        uri: 'https://api.datamarket.azure.com/Bing/Search/vi/Image',
+        qs: {
 
-    request(apiStart + apiKey + apiCode + req.params.term + '%27&$top=10' + '&$skip=' + offset + '&$format=JSON', function(error, response, body) {
+            $top: '10',
+            $skip: offset,
+            $format: 'JSON',
+            Query: "'" + query + "'"
+        },
+        auth: {
+            user: 'user',
+            pass: apiKey,
+        }
+
+    }
+    request(options, function(error, response, body) {
 
         if (!error && response.statusCode == 200) {
-            var parsedBody = JSON.parse(body);
-            var queryImages = parsedBody.d.results
-            var output = { results: [] };
+            var parsedBody = JSON.parse(body),
+                queryImages = parsedBody.d.results,
+                output = { results: [] };
             queryImages.forEach(function(Image) {
                 output.results.push({
 
@@ -53,6 +66,7 @@ app.get('/search/:term', function(req, res) {
             });
             res.json(output);
         } else if (error) {
+            console.log(error);
             res.redirect('/')
         }
     })
